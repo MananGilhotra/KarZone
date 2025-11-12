@@ -44,12 +44,10 @@ const SignUp = () => {
       
       console.log('Signup successful:', response);
       
-      // Store token and user data
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
       localStorage.setItem('isLoggedIn', 'true');
       
-      // Navigate to home
       navigate('/');
     } catch (err) {
       console.error('Signup error:', err);

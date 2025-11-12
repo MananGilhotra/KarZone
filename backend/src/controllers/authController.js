@@ -28,7 +28,6 @@ exports.signup = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    // Use axios to send welcome email via external service
     try {
       await sendWelcomeEmail(user.email, user.fullName);
     } catch (error) {

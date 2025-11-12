@@ -26,10 +26,10 @@ Authentication: JWT-based user login/signup with role-based access (User/Admin)
 Hosting:
 
 
-Frontend: Vercel / Netlify
+Frontend: Vercel
 
 
-Backend: Render / Railway
+Backend: Render
 
 
 Database: MongoDB Atlas
@@ -82,7 +82,7 @@ MongoDB (MongoDB Atlas)
 Authentication
 JWT (JSON Web Token)
 Hosting
-Frontend → Vercel / Netlify, Backend → Render / Railway
+Frontend → Vercel, Backend → Render
 
 
 7. API Overview
@@ -144,3 +144,8 @@ Optimized user experience through search, sorting, filtering, and pagination.
 
 
 Secure authentication and seamless deployment on cloud platforms.
+
+
+deployment link = https://kar-zone.vercel.app/
+
+

@@ -1,4 +1,38 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+// Resolve API base URL for both local dev and production (Vercel)
+// Priority:
+// 1) VITE_API_BASE_URL env (recommended for Vercel)
+// 2) LocalStorage override (allow runtime hotfix without rebuild)
+// 3) If not localhost in browser, use same-origin /api (for reverse-proxy scenarios)
+// 4) Fallback to localhost:3001 for local dev
+const PROD_BACKEND_URL = 'https://karzone.onrender.com/api';
+
+const resolveApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/+$/, '');
+
+  if (typeof window !== 'undefined') {
+    const lsUrl = localStorage.getItem('API_BASE_URL');
+    if (lsUrl && /^https?:\/\//.test(lsUrl)) return lsUrl.replace(/\/+$/, '');
+
+    const isLocal =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+
+    const isVercel = window.location.hostname === 'kar-zone.vercel.app' ||
+      window.location.hostname.endsWith('.vercel.app');
+    if (isVercel) {
+      return PROD_BACKEND_URL;
+    }
+
+    if (!isLocal) {
+      // Try same-origin /api (works if frontend is proxying to backend)
+      return `${window.location.origin}/api`;
+    }
+  }
+  return 'http://localhost:3001/api';
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 // Helper function to make API requests
 const apiRequest = async (endpoint, options = {}) => {
@@ -34,7 +68,7 @@ const apiRequest = async (endpoint, options = {}) => {
     console.error('API request error:', error);
     // Provide more detailed error messages
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TypeError') {
-      throw new Error(`Cannot connect to server at ${API_BASE_URL}. Please make sure the backend server is running on port 3001.`);
+      throw new Error(`Cannot connect to server at ${API_BASE_URL}. If this is production, make sure the backend (https://karzone.onrender.com) is running and Vercel env 'VITE_API_BASE_URL' points to it.`);
     }
     throw error;
   }

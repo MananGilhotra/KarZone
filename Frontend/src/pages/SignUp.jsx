@@ -61,7 +61,6 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center relative">
-      {/* Back to Home Button */}
       <Link
         to="/"
         className="absolute top-8 left-8 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors z-10"
@@ -81,9 +80,7 @@ const SignUp = () => {
         Back to Home
       </Link>
 
-      {/* Sign Up Card */}
       <div className="bg-gray-800/90 backdrop-blur-md rounded-3xl p-12 w-full max-w-md mx-4 shadow-2xl border border-gray-700/50" style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-        {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <img src={logocar} alt="KARZONE Logo" className="h-16 w-auto mb-4" />
           <h1 className="text-3xl font-bold text-white mb-4">KARZONE</h1>
@@ -94,16 +91,13 @@ const SignUp = () => {
           <p className="text-sm text-gray-400">Create your exclusive account</p>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-xl text-red-300 text-sm">
             {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Full Name Input */}
           <div className="relative">
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
               <svg
@@ -131,7 +125,6 @@ const SignUp = () => {
             />
           </div>
 
-          {/* Email Input */}
           <div className="relative">
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
               <svg
@@ -156,7 +149,6 @@ const SignUp = () => {
             />
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
               <svg
@@ -219,7 +211,6 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* Terms & Conditions */}
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -237,7 +228,6 @@ const SignUp = () => {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -265,7 +255,6 @@ const SignUp = () => {
           </button>
         </form>
 
-        {/* Login Link */}
         <div className="mt-8 text-center">
           <p className="text-gray-300 mb-4">Already have an account?</p>
           <Link

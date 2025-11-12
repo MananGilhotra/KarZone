@@ -1,15 +1,9 @@
-/**
- * Validation middleware for request validation
- * Custom validation without external dependencies
- */
 
-// Email validation
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 };
 
-// Signup validation middleware
 exports.validateSignup = (req, res, next) => {
   const { fullName, email, password } = req.body;
   const errors = [];
@@ -37,7 +31,6 @@ exports.validateSignup = (req, res, next) => {
   next();
 };
 
-// Login validation middleware
 exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
   const errors = [];

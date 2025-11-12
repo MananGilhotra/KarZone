@@ -1,13 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * Protect routes - Verify JWT token and get user
- */
 exports.protect = async (req, res, next) => {
   let token;
 
-  // Check for token in headers
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -15,7 +11,6 @@ exports.protect = async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  // Make sure token exists
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -24,10 +19,8 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Get user from token
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {

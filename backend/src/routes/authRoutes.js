@@ -9,11 +9,9 @@ const {
 const { protect } = require('../middleware/auth');
 const { validateSignup, validateLogin } = require('../middleware/validate');
 
-// Public routes
 router.post('/signup', validateSignup, signup);
 router.post('/login', validateLogin, login);
 
-// Protected routes
 router.get('/me', protect, getMe);
 router.get('/users', protect, getAllUsers);
 

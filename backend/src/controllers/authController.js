@@ -11,7 +11,6 @@ exports.signup = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (existingUser) {
@@ -21,14 +20,12 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Create user
     const user = await User.create({
       fullName,
       email: email.toLowerCase(),
       password,
     });
 
-    // Generate token
     const token = generateToken(user._id);
 
     // Use axios to send welcome email via external service
@@ -36,7 +33,7 @@ exports.signup = async (req, res) => {
       await sendWelcomeEmail(user.email, user.fullName);
     } catch (error) {
       console.error('Error sending welcome email:', error);
-      // Don't fail registration if email fails
+      
     }
 
     res.status(201).json({
@@ -52,15 +49,13 @@ exports.signup = async (req, res) => {
   } catch (error) {
     console.error('Signup error:', error);
 
-    // Handle duplicate key error (email already exists)
+    
     if (error.code === 11000) {
       return res.status(400).json({
         success: false,
         message: 'User already exists with this email',
       });
     }
-
-    // Handle validation errors
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({
@@ -86,7 +81,6 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user and include password field (since it's select: false by default)
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
     if (!user) {
@@ -96,7 +90,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if password matches
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
@@ -106,15 +99,12 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Generate token
     const token = generateToken(user._id);
 
-    // Use axios to log login activity to external service
     try {
       await logUserActivity(user._id.toString(), 'login');
     } catch (error) {
       console.error('Error logging activity:', error);
-      // Don't fail login if activity logging fails
     }
 
     res.status(200).json({

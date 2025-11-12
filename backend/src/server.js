@@ -3,16 +3,12 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 
-// Load environment variables
 dotenv.config();
 
-// Connect to database
 connectDB();
 
 const app = express();
 
-// Middleware
-// Dynamic CORS: allow origins from env (comma-separated), plus local dev
 const defaultOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
@@ -34,7 +30,6 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    // In production, log and reject unknown origins
     if (process.env.NODE_ENV === 'production') {
       console.log(`⚠️  CORS rejected origin: ${origin}`);
       return callback(new Error('Not allowed by CORS'));
@@ -47,7 +42,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Log all requests for debugging
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
@@ -56,10 +50,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 
-// Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -68,7 +60,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root route
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
@@ -77,7 +68,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -85,7 +75,6 @@ app.use((req, res) => {
   });
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   res.status(err.status || 500).json({

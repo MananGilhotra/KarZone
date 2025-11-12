@@ -32,12 +32,10 @@ const Login = () => {
       
       console.log('Login successful:', response);
       
-      // Store token and user data
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
       localStorage.setItem('isLoggedIn', 'true');
       
-      // Navigate to home
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
@@ -49,7 +47,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center relative">
-      {/* Back to Home Button */}
+
       <Link
         to="/"
         className="absolute top-8 left-8 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors z-10"
@@ -69,9 +67,8 @@ const Login = () => {
         Back to Home
       </Link>
 
-      {/* Login Card */}
       <div className="bg-gray-800/90 backdrop-blur-md rounded-3xl p-12 w-full max-w-md mx-4 shadow-2xl border border-gray-700/50" style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-        {/* Logo */}
+        
         <div className="flex flex-col items-center mb-8">
           <img src={logocar} alt="KARZONE Logo" className="h-16 w-auto mb-4" />
           <h1 className="text-4xl font-bold text-white mb-2">KARZONE</h1>
@@ -81,16 +78,13 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-xl text-red-300 text-sm">
             {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Input */}
           <div>
             <input
               type="email"
@@ -104,7 +98,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -153,7 +146,6 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -163,7 +155,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Sign Up Link */}
         <div className="mt-8 text-center">
           <p className="text-gray-300 mb-4">Don't have an account?</p>
           <Link

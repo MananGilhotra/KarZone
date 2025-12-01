@@ -1,10 +1,10 @@
 // src/data/carsData.js
-import HC1 from "../../assets/HC1.png";
-import HC2 from "../../assets/HC2.png";
-import HC3 from "../../assets/HC3.png";
-import HC4 from "../../assets/HC4.png";
-import HC5 from "../../assets/HC5.png";
-import HC6 from "../../assets/HC6.png";
+import HC1 from "./HC1.png";
+import HC2 from "./HC2.png";
+import HC3 from "./HC3.png";
+import HC4 from "./HC4.png";
+import HC5 from "./HC5.png";
+import HC6 from "./HC6.png";
 
 const carsData = [
   {

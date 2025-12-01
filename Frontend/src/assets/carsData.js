@@ -1,16 +1,16 @@
 // carsData.js
-import C1 from "../../assets/C1.png"
-import C2 from "../../assets/C2.png";
-import C3 from "../../assets/C3.png";
-import C4 from "../../assets/C4.png";
-import C5 from "../../assets/C5.png";
-import C6 from "../../assets/C6.png";
-import C7 from "../../assets/C7.png";
-import C8 from "../../assets/C8.png";
-import C9 from "../../assets/C9.png";
-import C10 from "../../assets/C10.png";
-import C11 from "../../assets/C11.png";
-import C12 from "../../assets/C12.png";
+import C1 from "./C1.png";
+import C2 from "./C2.png";
+import C3 from "./C3.png";
+import C4 from "./C4.png";
+import C5 from "./C5.png";
+import C6 from "./C6.png";
+import C7 from "./C7.png";
+import C8 from "./C8.png";
+import C9 from "./C9.png";
+import C10 from "./C10.png";
+import C11 from "./C11.png";
+import C12 from "./C12.png";
 
 const carsData = [
   {

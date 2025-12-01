@@ -36,7 +36,14 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(response.user));
       localStorage.setItem('isLoggedIn', 'true');
       
-      navigate('/');
+      // Check if there's a redirect path
+      const redirectPath = localStorage.getItem('redirectAfterLogin');
+      if (redirectPath) {
+        localStorage.removeItem('redirectAfterLogin');
+        navigate(redirectPath);
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message || 'Login failed. Please try again.');

@@ -84,7 +84,7 @@ export default function HeroSleek() {
   const ty = (mouse.y - 0.5) * 2 * (maxTranslate * 0.55) + floatOffset.y;
 
   return (
-    <div className="">
+    <div className="-mt-20">
       <div
         ref={wrapRef}
         className={styles.container}
@@ -95,11 +95,10 @@ export default function HeroSleek() {
           ref={bgRef}
           className={styles.background}
           style={{
-            transform: `translate3d(${tx * 0.55}px, ${
-              ty * 0.55
-            }px, 0) scale(1.03)`,
-            transition: mouse.x === 0.5 && mouse.y === 0.5 
-              ? "transform 0.3s cubic-bezier(.2,.9,.25,1)" 
+            transform: `translate3d(${tx * 0.55}px, ${ty * 0.55
+              }px, 0) scale(1.03)`,
+            transition: mouse.x === 0.5 && mouse.y === 0.5
+              ? "transform 0.3s cubic-bezier(.2,.9,.25,1)"
               : "transform 220ms cubic-bezier(.2,.9,.25,1)",
           }}
         >
@@ -151,6 +150,11 @@ export default function HeroSleek() {
             fill="none"
             filter="url(#glow2)"
             className="center-path"
+            style={{
+              strokeDasharray: '1000',
+              strokeDashoffset: '1000',
+              animation: 'drawLine 3s ease-in-out infinite'
+            }}
           />
           <path
             id="leftArc"
@@ -161,6 +165,11 @@ export default function HeroSleek() {
             fill="none"
             filter="url(#glow2)"
             className="side-path left"
+            style={{
+              strokeDasharray: '800',
+              strokeDashoffset: '800',
+              animation: 'drawLine 3.5s ease-in-out infinite'
+            }}
           />
           <path
             id="rightArc"
@@ -171,8 +180,24 @@ export default function HeroSleek() {
             fill="none"
             filter="url(#glow2)"
             className="side-path right"
+            style={{
+              strokeDasharray: '800',
+              strokeDashoffset: '800',
+              animation: 'drawLine 4s ease-in-out infinite'
+            }}
           />
         </svg>
+
+        <style>{`
+          @keyframes drawLine {
+            0% {
+              stroke-dashoffset: 1000;
+            }
+            100% {
+              stroke-dashoffset: 0;
+            }
+          }
+        `}</style>
 
         {/* Refined glass CTA card */}
         <div className={styles.ctaContainer}>
@@ -185,12 +210,12 @@ export default function HeroSleek() {
               </p>
             </div>
             <button onClick={handleSeeFleet} className={`${styles.ctaButton} flex items-center gap-3`}>
-                <span className={styles.buttonText}>See Fleet</span>
-              </button>
+              <span className={styles.buttonText}>See Fleet</span>
+            </button>
             <span aria-hidden="true" className={styles.outline}></span>
           </div>
         </div>
-    
+
       </div>
     </div>
   );

@@ -11,6 +11,12 @@ body {
   color: #ffffff;
 }
 
+/* Make all buttons use pointer cursor */
+button {
+  cursor: pointer;
+}
+
+
 /* Premium Button Styles */
 .metal-btn {
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);

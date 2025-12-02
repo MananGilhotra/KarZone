@@ -137,9 +137,37 @@ export const bookingsAPI = {
     return api.put(`/bookings/${bookingId}/cancel`);
   },
 
+  updateBooking: async (bookingId, updateData) => {
+    return api.put(`/bookings/${bookingId}`, updateData);
+  },
+
   deleteBooking: async (bookingId) => {
     return api.delete(`/bookings/${bookingId}`);
   },
 };
 
+// Reviews API
+export const reviewsAPI = {
+  createReview: async (reviewData) => {
+    return api.post('/reviews', reviewData);
+  },
+
+  getCarReviews: async (carId) => {
+    return api.get(`/reviews/car/${carId}`);
+  },
+
+  getMyReviews: async () => {
+    return api.get('/reviews/my-reviews');
+  },
+
+  updateReview: async (reviewId, reviewData) => {
+    return api.put(`/reviews/${reviewId}`, reviewData);
+  },
+
+  deleteReview: async (reviewId) => {
+    return api.delete(`/reviews/${reviewId}`);
+  },
+};
+
 export default api;
+

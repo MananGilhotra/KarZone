@@ -84,6 +84,38 @@ router.put('/:id/cancel', auth, async (req, res) => {
     }
 });
 
+// Update a booking (location and phone only)
+router.put('/:id', auth, async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        // Check user
+        if (booking.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: 'User not authorized' });
+        }
+
+        // Only allow updates if status is confirmed
+        if (booking.status === 'cancelled') {
+            return res.status(400).json({ message: 'Cannot update cancelled bookings' });
+        }
+
+        const { pickupLocation, phone } = req.body;
+
+        if (pickupLocation) booking.pickupLocation = pickupLocation;
+        if (phone) booking.phone = phone;
+
+        await booking.save();
+        res.json(booking);
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Delete a booking
 router.delete('/:id', auth, async (req, res) => {
     try {

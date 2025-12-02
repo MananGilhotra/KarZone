@@ -131,6 +131,25 @@ const Navbar = () => {
               <div className="w-full h-0.5 bg-orange-500 mt-1"></div>
             )}
           </Link>
+
+          {isLoggedIn && (
+            <>
+              <div className="w-px h-5 bg-white/20 mx-2"></div>
+              <Link
+                to="/bookings"
+                className={`px-4 py-2 text-base font-medium transition-colors ${
+                  isActive('/bookings') 
+                    ? 'text-orange-500' 
+                    : 'text-white/80 hover:text-white'
+                }`}
+              >
+                My Bookings
+                {isActive('/bookings') && (
+                  <div className="w-full h-0.5 bg-orange-500 mt-1"></div>
+                )}
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Login/Logout - desktop */}
@@ -249,6 +268,20 @@ const Navbar = () => {
           >
             Contact
           </Link>
+
+          {isLoggedIn && (
+            <Link
+              to="/bookings"
+              onClick={() => setIsOpen(false)}
+              className={`block w-full px-3 py-2 rounded-lg text-base font-medium ${
+                isActive('/bookings')
+                  ? 'bg-gray-800 text-orange-500'
+                  : 'text-gray-200 hover:bg-gray-800'
+              }`}
+            >
+              My Bookings
+            </Link>
+          )}
 
           <div className="border-t border-gray-700 pt-3 mt-2">
             {isLoggedIn ? (

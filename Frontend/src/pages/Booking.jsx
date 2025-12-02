@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PaymentModal from '../components/PaymentModal';
 import carsData from '../assets/carsData';
+import homeCarsData from '../assets/HcarsData';
 import { carDetailStyles as styles } from '../assets/dummyStyles';
 import { 
   FaUsers, 
@@ -22,6 +24,7 @@ import {
 const Booking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [car, setCar] = useState(null);
   const [formData, setFormData] = useState({
     pickupDate: '',
@@ -34,16 +37,28 @@ const Booking = () => {
   const [activeField, setActiveField] = useState('');
   const [totalDays, setTotalDays] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const foundCar = carsData.find(c => c.id === parseInt(id));
+    const allCars = [...carsData, ...homeCarsData];
+    const foundCar = allCars.find(c => c.id === parseInt(id));
     if (foundCar) {
       setCar(foundCar);
       setTotalPrice(foundCar.price);
     } else {
       navigate('/cars');
     }
-  }, [id, navigate]);
+
+    // Check for Stripe payment success callback
+    const sessionId = searchParams.get('session_id');
+    const success = searchParams.get('success');
+    
+    if (success === 'true' && sessionId) {
+      // This would be handled by Stripe redirect
+      // For now, we handle it in PaymentModal
+    }
+  }, [id, navigate, searchParams]);
 
   useEffect(() => {
     if (formData.pickupDate && formData.returnDate) {
@@ -67,6 +82,19 @@ const Booking = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError('');
+
+    // Validation
+    if (!formData.pickupDate || !formData.returnDate) {
+      setError('Please select pickup and return dates.');
+      return;
+    }
+
+    if (new Date(formData.pickupDate) > new Date(formData.returnDate)) {
+      setError('Return date cannot be before pickup date.');
+      return;
+    }
+
     // Check if user is logged in
     const token = localStorage.getItem('token');
     if (!token) {
@@ -75,10 +103,39 @@ const Booking = () => {
       return;
     }
     
-    // Handle booking submission
-    console.log('Booking submitted:', { car, formData, totalPrice });
-    alert('Booking confirmed! We will contact you shortly.');
-    navigate('/cars');
+    // Open payment modal
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = (transactionId) => {
+    // Create booking object
+    const booking = {
+      id: Date.now().toString(),
+      carId: car.id,
+      carName: car.name,
+      carType: car.type,
+      carImage: car.image,
+      pickupDate: formData.pickupDate,
+      returnDate: formData.returnDate,
+      pickupLocation: formData.pickupLocation,
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      totalPrice: totalPrice,
+      totalDays: totalDays,
+      status: 'confirmed',
+      transactionId: transactionId,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to localStorage
+    const existingBookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+    existingBookings.push(booking);
+    localStorage.setItem('userBookings', JSON.stringify(existingBookings));
+
+    // Clear form and redirect
+    setShowPaymentModal(false);
+    navigate('/bookings?success=true');
   };
 
   const getFuelIcon = (fuel) => {
@@ -176,6 +233,12 @@ const Booking = () => {
                 Reserve Your <span className="text-orange-500">Drive</span>
               </h2>
               <p className={styles.bookingSubtitle}>Fast · Secure · Easy</p>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-xl text-red-300 text-sm">
+                  {error}
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className={styles.form}>
                 {/* Pickup Date */}
@@ -314,6 +377,31 @@ const Booking = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {showPaymentModal && car && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          bookingData={{
+            carId: car.id,
+            car: car,
+            carName: car.name,
+            carImage: car.image,
+            carType: car.type,
+            pickupDate: formData.pickupDate,
+            returnDate: formData.returnDate,
+            pickupLocation: formData.pickupLocation,
+            fullName: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            totalPrice: totalPrice,
+            totalDays: totalDays,
+          }}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
+
       <Footer />
     </div>
   );

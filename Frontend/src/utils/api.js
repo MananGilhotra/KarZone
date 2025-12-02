@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Resolve API base URL for both local dev and production (Vercel)
 // Priority:
 // 1) VITE_API_BASE_URL env (recommended for Vercel)
@@ -34,66 +36,110 @@ const resolveApiBaseUrl = () => {
 
 const API_BASE_URL = resolveApiBaseUrl();
 
-// Helper function to make API requests
-const apiRequest = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('token');
-  
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
-    },
-    ...options,
-  };
+// Create Axios instance
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-  try {
-    console.log(`Making API request to: ${API_BASE_URL}${endpoint}`, config);
-    
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
-    console.log(`Response status: ${response.status}`, response);
-    
-    // Check if response is ok
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Server error' }));
-      console.error('API error response:', errorData);
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-
-    const data = await response.json();
-    console.log('API response data:', data);
-    return data;
-  } catch (error) {
+    console.log(`Making API request to: ${config.baseURL}${config.url}`, config);
+    return config;
+  },
+  (error) => {
     console.error('API request error:', error);
-    // Provide more detailed error messages
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TypeError') {
-      throw new Error(`Cannot connect to server at ${API_BASE_URL}. If this is production, make sure the backend (https://karzone.onrender.com) is running and Vercel env 'VITE_API_BASE_URL' points to it.`);
-    }
-    throw error;
+    return Promise.reject(error);
   }
+);
+
+// Response interceptor for handling errors
+api.interceptors.response.use(
+  (response) => {
+    console.log(`Response status: ${response.status}`, response);
+    console.log('API response data:', response.data);
+    return response.data;
+  },
+  (error) => {
+    console.error('API response error:', error);
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('Error data:', error.response.data);
+      console.error('Error status:', error.response.status);
+      const message = error.response.data.message || 'Server error';
+      throw new Error(message);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received:', error.request);
+      throw new Error(`Cannot connect to server at ${API_BASE_URL}. If this is production, make sure the backend is running.`);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error setting up request:', error.message);
+      throw error;
+    }
+  }
+);
+
+// Helper function to keep consistent API with previous implementation
+const apiRequest = async (endpoint, options = {}) => {
+  // Axios handles method, body (as data), and headers differently than fetch
+  // This wrapper adapts the old style calls to axios
+  const method = options.method || 'GET';
+  const data = options.body ? JSON.parse(options.body) : undefined;
+  const headers = options.headers || {};
+
+  return api({
+    url: endpoint,
+    method,
+    data,
+    headers,
+  });
 };
 
 // Auth API
 export const authAPI = {
   signup: async (userData) => {
-    return apiRequest('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+    return api.post('/auth/signup', userData);
   },
 
   login: async (email, password) => {
-    return apiRequest('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    return api.post('/auth/login', { email, password });
   },
 
   getMe: async () => {
-    return apiRequest('/auth/me');
+    return api.get('/auth/me');
   },
 };
 
-export default apiRequest;
+// Bookings API
+export const bookingsAPI = {
+  createPaymentIntent: async (bookingData) => {
+    return api.post('/bookings/create-payment-intent', bookingData);
+  },
 
+  createBooking: async (bookingData) => {
+    return api.post('/bookings', bookingData);
+  },
+
+  getMyBookings: async () => {
+    return api.get('/bookings/my-bookings');
+  },
+
+  cancelBooking: async (bookingId) => {
+    return api.put(`/bookings/${bookingId}/cancel`);
+  },
+
+  deleteBooking: async (bookingId) => {
+    return api.delete(`/bookings/${bookingId}`);
+  },
+};
+
+export default api;

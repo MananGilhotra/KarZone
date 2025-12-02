@@ -185,8 +185,8 @@ export default function HeroSleek() {
               </p>
             </div>
             <button onClick={handleSeeFleet} className={`${styles.ctaButton} flex items-center gap-3`}>
-              <span className={styles.buttonText}>See Fleet</span>
-            </button>
+                <span className={styles.buttonText}>See Fleet</span>
+              </button>
             <span aria-hidden="true" className={styles.outline}></span>
           </div>
         </div>

@@ -9,38 +9,46 @@ connectDB();
 
 const app = express();
 
-const defaultOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'http://127.0.0.1:5173',
-  'http://localhost:5174',
-  'http://127.0.0.1:5174',
-  'https://kar-zone.vercel.app',
-  'https://karzone.onrender.com',
-];
-const envOrigins = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+// const defaultOrigins = [
+//   'http://localhost:5173',
+//   'http://localhost:3000',
+//   'http://127.0.0.1:5173',
+//   'http://localhost:5174',
+//   'http://127.0.0.1:5174',
+//   'https://kar-zone.vercel.app',
+//   'https://karzone.onrender.com',
+// ];
+// const envOrigins = (process.env.ALLOWED_ORIGINS || '')
+//   .split(',')
+//   .map(s => s.trim())
+//   .filter(Boolean);
+// const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    if (process.env.NODE_ENV === 'production') {
-      console.log(`⚠️  CORS rejected origin: ${origin}`);
-      return callback(new Error('Not allowed by CORS'));
-    }
-    console.log(`⚠️  CORS allowed (dev) unknown origin: ${origin}`);
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin) return callback(null, true);
+//     if (allowedOrigins.includes(origin)) {
+//       return callback(null, true);
+//     }
+//     if (process.env.NODE_ENV === 'production') {
+//       console.log(`⚠️  CORS rejected origin: ${origin}`);
+//       return callback(new Error('Not allowed by CORS'));
+//     }
+//     console.log(`⚠️  CORS allowed (dev) unknown origin: ${origin}`);
+//     return callback(null, true);
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+app.use(cors(
+  {
+    origin:'*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }
+))
 
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);

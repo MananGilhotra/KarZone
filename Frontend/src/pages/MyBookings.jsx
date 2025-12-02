@@ -125,13 +125,13 @@ const MyBookings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-black">
+    <div className="min-h-screen bg-linear-to-b from-gray-950 to-black">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-orange-400 to-orange-600 mb-4">
             My Bookings
           </h1>
           <p className="text-gray-400 text-lg">

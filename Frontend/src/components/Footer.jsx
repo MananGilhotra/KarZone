@@ -34,7 +34,7 @@ const Footer = () => {
               <a href="#" className={styles.socialIcon} aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/manan-gilhotra-7048b5324/" className={styles.socialIcon} aria-label="LinkedIn">
                 <FaLinkedin />
               </a>
               <a href="#" className={styles.socialIcon} aria-label="YouTube">
@@ -52,15 +52,15 @@ const Footer = () => {
             <div className={styles.contactList}>
               <div className={styles.contactItem}>
                 <FaMapMarkerAlt className={styles.contactIcon} />
-                <span>173 Drive Avenue, Auto City, CA 90210</span>
+                <span>Delhi Vasant Kunj</span>
               </div>
               <div className={styles.contactItem}>
                 <FaPhone className={styles.contactIcon} />
-                <span>+01 8290431275</span>
+                <span>+91 9929945446</span>
               </div>
               <div className={styles.contactItem}>
                 <FaEnvelope className={styles.contactIcon} />
-                <span>info@hexagonsservices.com</span>
+                <span>karzone@gmail.com</span>
               </div>
             </div>
             <div className={styles.hoursContainer}>
@@ -123,13 +123,12 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className={styles.copyright}>
           <p>© 2025 KARZONE. All rights reserved.</p>
           <p>
             Designed by{' '}
-            <a href="#" className={styles.designerLink}>
-              Hexagon Digital Services
+            <a href="https://www.linkedin.com/in/manan-gilhotra-7048b5324/" className={styles.designerLink}>
+              Manan Gilhotra
             </a>
           </p>
         </div>

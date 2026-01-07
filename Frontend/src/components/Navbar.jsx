@@ -85,7 +85,7 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation Links - desktop */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           <Link
             to="/"
             className={`px-4 py-2 text-base font-medium transition-colors ${isActive('/')
@@ -149,7 +149,7 @@ const Navbar = () => {
         </div>
 
         {/* Login/Logout - desktop */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden lg:flex items-center">
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
@@ -195,7 +195,7 @@ const Navbar = () => {
         <button
           ref={buttonRef}
           type="button"
-          className="md:hidden inline-flex items-center justify-center p-2.5 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[44px] min-h-[44px]"
+          className="lg:hidden inline-flex items-center justify-center p-2.5 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[44px] min-h-[44px]"
           aria-expanded={isOpen}
           aria-label="Toggle navigation menu"
           onClick={() => setIsOpen((prev) => !prev)}
@@ -232,7 +232,7 @@ const Navbar = () => {
 
       {/* Mobile dropdown menu */}
       <div
-        className={`md:hidden max-w-7xl mx-auto mt-2 rounded-2xl glass-navbar border border-white/10 overflow-hidden transition-all duration-300 ease-in-out shadow-xl ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 border-0'
+        className={`lg:hidden max-w-7xl mx-auto mt-2 rounded-2xl glass-navbar border border-white/10 overflow-hidden transition-all duration-300 ease-in-out shadow-xl ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 border-0'
           }`}
       >
         <div

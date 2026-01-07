@@ -17,7 +17,9 @@ import {
   FaStar
 } from 'react-icons/fa';
 import { bookingsAPI, reviewsAPI } from '../utils/api';
-import { ToastContainer, useToast } from '../components/Toast';
+import { ToastContainer } from '../components/Toast';
+import { useToast } from '../hooks/useToast';
+import ConfirmModal from '../components/ConfirmModal';
 
 const MyBookings = () => {
   const navigate = useNavigate();
@@ -40,6 +42,14 @@ const MyBookings = () => {
     carName: '',
     rating: 5,
     comment: ''
+  });
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+    type: 'warning',
+    confirmText: 'Confirm'
   });
   const [reviews, setReviews] = useState([]);
 
@@ -71,7 +81,7 @@ const MyBookings = () => {
       showSuccess('Payment successful! Your booking has been confirmed.');
       setSearchParams({});
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, showSuccess]);
 
   const filteredBookings = bookings.filter(booking => {
     const now = new Date();
@@ -90,30 +100,46 @@ const MyBookings = () => {
   });
 
   const handleCancel = async (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      try {
-        await bookingsAPI.cancelBooking(bookingId);
-        // Refetch bookings to ensure data is synced with MongoDB
-        const data = await bookingsAPI.getMyBookings();
-        setBookings(data);
-      } catch (error) {
-        console.error('Error cancelling booking:', error);
-        showError('Failed to cancel booking');
+    setConfirmModal({
+      isOpen: true,
+      title: 'Cancel Booking',
+      message: 'Are you sure you want to cancel this booking?',
+      type: 'warning',
+      confirmText: 'Cancel Booking',
+      onConfirm: async () => {
+        try {
+          await bookingsAPI.cancelBooking(bookingId);
+          // Refetch bookings to ensure data is synced with MongoDB
+          const data = await bookingsAPI.getMyBookings();
+          setBookings(data);
+          showSuccess('Booking cancelled successfully!');
+        } catch (error) {
+          console.error('Error cancelling booking:', error);
+          showError('Failed to cancel booking');
+        }
       }
-    }
+    });
   };
 
   const handleDelete = async (bookingId) => {
-    if (window.confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
-      try {
-        await bookingsAPI.deleteBooking(bookingId);
-        const data = await bookingsAPI.getMyBookings();
-        setBookings(data);
-      } catch (error) {
-        console.error('Error deleting booking:', error);
-        showError('Failed to delete booking');
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Booking',
+      message: 'Are you sure you want to delete this booking? This action cannot be undone.',
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        try {
+          await bookingsAPI.deleteBooking(bookingId);
+          const data = await bookingsAPI.getMyBookings();
+          setBookings(data);
+          showSuccess('Booking deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting booking:', error);
+          showError('Failed to delete booking');
+        }
       }
-    }
+    });
   };
 
   const handleEditSubmit = async (e) => {
@@ -159,17 +185,24 @@ const MyBookings = () => {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (window.confirm('Are you sure you want to delete this review?')) {
-      try {
-        await reviewsAPI.deleteReview(reviewId);
-        const data = await reviewsAPI.getMyReviews();
-        setReviews(data);
-        showSuccess('Review deleted successfully!');
-      } catch (error) {
-        console.error('Error deleting review:', error);
-        showError('Failed to delete review');
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Review',
+      message: 'Are you sure you want to delete this review?',
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        try {
+          await reviewsAPI.deleteReview(reviewId);
+          const data = await reviewsAPI.getMyReviews();
+          setReviews(data);
+          showSuccess('Review deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting review:', error);
+          showError('Failed to delete review');
+        }
       }
-    }
+    });
   };
 
   const hasReviewed = (bookingId) => {
@@ -653,6 +686,17 @@ const MyBookings = () => {
             </div>
           </div>
         )}
+
+        {/* Confirm Modal */}
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+          onConfirm={confirmModal.onConfirm}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          type={confirmModal.type}
+          confirmText={confirmModal.confirmText}
+        />
 
         <Footer />
       </div>

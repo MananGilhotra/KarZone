@@ -42,6 +42,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable CORS with credentials
 });
 
 // Request interceptor for adding auth token
@@ -88,21 +89,7 @@ api.interceptors.response.use(
   }
 );
 
-// Helper function to keep consistent API with previous implementation
-const apiRequest = async (endpoint, options = {}) => {
-  // Axios handles method, body (as data), and headers differently than fetch
-  // This wrapper adapts the old style calls to axios
-  const method = options.method || 'GET';
-  const data = options.body ? JSON.parse(options.body) : undefined;
-  const headers = options.headers || {};
 
-  return api({
-    url: endpoint,
-    method,
-    data,
-    headers,
-  });
-};
 
 // Auth API
 export const authAPI = {

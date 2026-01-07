@@ -1,0 +1,34 @@
+
+> frontend@0.0.0 lint
+> eslint .
+
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/CTA.jsx
+  25:39  warning  The ref value 'sectionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/HomeCars.jsx
+  29:39  warning  The ref value 'sectionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/PaymentModal.jsx
+  6:7  error  'stripePromise' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/Stats.jsx
+  25:39  warning  The ref value 'sectionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/Testimonials.jsx
+  26:39  warning  The ref value 'sectionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/components/Toast.jsx
+  78:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/pages/Cars.jsx
+  30:39  warning  The ref value 'sectionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sectionRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/pages/MyBookings.jsx
+  83:6  warning  React Hook useEffect has a missing dependency: 'showSuccess'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/manangilhotra010/Desktop/KarZone_/Frontend/src/utils/api.js
+  93:7  error  'apiRequest' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+✖ 9 problems (3 errors, 6 warnings)
+

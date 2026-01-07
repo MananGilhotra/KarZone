@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+
 import { FaTimes, FaCreditCard, FaSpinner } from 'react-icons/fa';
 import { bookingsAPI } from '../utils/api';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51Q...');
+
 
 const PaymentModal = ({ isOpen, onClose, bookingData, onSuccess }) => {
   const [loading, setLoading] = useState(false);

@@ -21,13 +21,14 @@ const Cars = () => {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -43,14 +44,14 @@ const Cars = () => {
     }
   };
 
-  const filteredCars = filter === 'all' 
-    ? carsData 
+  const filteredCars = filter === 'all'
+    ? carsData
     : carsData.filter(car => {
-        if (filter === 'electric') return car.fuel.toLowerCase() === 'electric';
-        if (filter === 'sports') return car.type.toLowerCase().includes('sports') || car.type.toLowerCase().includes('supercar');
-        if (filter === 'suv') return car.type.toLowerCase().includes('suv');
-        return true;
-      });
+      if (filter === 'electric') return car.fuel.toLowerCase() === 'electric';
+      if (filter === 'sports') return car.type.toLowerCase().includes('sports') || car.type.toLowerCase().includes('supercar');
+      if (filter === 'suv') return car.type.toLowerCase().includes('suv');
+      return true;
+    });
 
   return (
     <div className={styles.pageContainer}>
@@ -67,41 +68,37 @@ const Cars = () => {
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           <button
             onClick={() => setFilter('all')}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              filter === 'all'
+            className={`px-6 py-2 rounded-full font-medium transition-all ${filter === 'all'
                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
+              }`}
           >
             All Cars
           </button>
           <button
             onClick={() => setFilter('electric')}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              filter === 'electric'
+            className={`px-6 py-2 rounded-full font-medium transition-all ${filter === 'electric'
                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
+              }`}
           >
             Electric
           </button>
           <button
             onClick={() => setFilter('sports')}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              filter === 'sports'
+            className={`px-6 py-2 rounded-full font-medium transition-all ${filter === 'sports'
                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
+              }`}
           >
             Sports
           </button>
           <button
             onClick={() => setFilter('suv')}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              filter === 'suv'
+            className={`px-6 py-2 rounded-full font-medium transition-all ${filter === 'suv'
                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
+              }`}
           >
             SUV
           </button>
@@ -120,7 +117,7 @@ const Cars = () => {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className={styles.glowEffect}></div>
-              
+
               <div className={styles.imageContainer}>
                 <img
                   src={car.image}

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { contactPageStyles as styles } from '../assets/dummyStyles';
-import { ToastContainer, useToast } from '../components/Toast';
+import { ToastContainer } from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 import {
   FaWhatsapp,
   FaEnvelope,

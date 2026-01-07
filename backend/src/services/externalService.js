@@ -1,73 +1,21 @@
-const axios = require('../utils/axiosConfig');
+const axios = require('axios');
 
 /**
- * Send welcome email (example using axios)
- * @param {string} email - User email
- * @param {string} fullName - User full name
+ * Send welcome email to new user (stub/mock implementation)
+ * In production, this would integrate with an email service like SendGrid, Mailgun, etc.
  */
 exports.sendWelcomeEmail = async (email, fullName) => {
-  try {
-    
-    const emailServiceUrl = process.env.EMAIL_SERVICE_URL;
-
-    if (emailServiceUrl) {
-      const emailData = {
-        to: email,
-        subject: 'Welcome to KARZONE!',
-        html: `
-          <h1>Welcome ${fullName}!</h1>
-          <p>Thank you for signing up with KARZONE.</p>
-          <p>Enjoy your premium mobility experience!</p>
-        `,
-      };
-
-    }
-
-    console.log(`📧 Welcome email would be sent to: ${email}`);
-    console.log(`   Name: ${fullName}`);
-    
-    return { success: true, message: 'Email sent successfully' };
-  } catch (error) {
-    console.error('Error sending welcome email:', error);
-    return { success: false, message: 'Failed to send email' };
-  }
+    console.log(`📧 Sending welcome email to ${email}`);
+    console.log(`Welcome ${fullName}! Thank you for signing up with KARZONE.`);
+    // In production, integrate with actual email service
+    return Promise.resolve({ success: true });
 };
 
 /**
- * Log user activity to external analytics service
- * @param {string} userId - User ID
- * @param {string} activity - Activity type
+ * Log user activity (stub/mock implementation)
+ * In production, this could send to analytics service
  */
-exports.logUserActivity = async (userId, activity) => {
-  try {
-    const activityData = {
-      userId,
-      activity,
-      timestamp: new Date().toISOString(),
-    };
-
-
-    console.log(`📊 Activity logged: ${activity} for user ${userId}`);
-    return { success: true };
-  } catch (error) {
-    console.error('Error logging activity:', error);
-    return { success: false };
-  }
+exports.logUserActivity = async (userId, action) => {
+    console.log(`📊 User Activity: ${userId} - ${action} at ${new Date().toISOString()}`);
+    return Promise.resolve({ success: true });
 };
-
-/**
- * Verify email using external service
- * @param {string} email - Email to verify
- */
-exports.verifyEmail = async (email) => {
-  try {
-   
-
-    console.log(`🔍 Email verification check for: ${email}`);
-    return { valid: true, message: 'Email verified' };
-  } catch (error) {
-    console.error('Error verifying email:', error);
-    return { valid: false, message: 'Email verification failed' };
-  }
-};
-

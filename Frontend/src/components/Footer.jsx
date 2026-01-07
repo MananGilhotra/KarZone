@@ -25,20 +25,8 @@ const Footer = () => {
               Premium car rental service with the latest models and exceptional customer service. Drive your dream car today!
             </p>
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon} aria-label="Facebook">
-                <FaFacebook />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Twitter">
-                <FaTwitter />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Instagram">
-                <FaInstagram />
-              </a>
               <a href="https://www.linkedin.com/in/manan-gilhotra-7048b5324/" className={styles.socialIcon} aria-label="LinkedIn">
                 <FaLinkedin />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="YouTube">
-                <FaYoutube />
               </a>
             </div>
           </div>

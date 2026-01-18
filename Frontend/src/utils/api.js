@@ -6,7 +6,7 @@ import axios from 'axios';
 // 2) LocalStorage override (allow runtime hotfix without rebuild)
 // 3) If not localhost in browser, use same-origin /api (for reverse-proxy scenarios)
 // 4) Fallback to localhost:3001 for local dev
-const PROD_BACKEND_URL = 'https://karzone.onrender.com/api';
+const PROD_BACKEND_URL = 'https://karzone-uptg.onrender.com/api';
 
 const resolveApiBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;

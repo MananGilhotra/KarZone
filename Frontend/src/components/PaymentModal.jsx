@@ -83,7 +83,25 @@ const PaymentModal = ({ isOpen, onClose, bookingData, onSuccess }) => {
       onClose();
     } catch (err) {
       console.error('Payment error:', err);
-      setError(err.message || 'Payment failed. Please try again.');
+      const errorMsg = err.message || 'Payment failed. Please try again.';
+      
+      // If it's an auth error, redirect to login
+      if (
+        errorMsg.toLowerCase().includes('log in') ||
+        errorMsg.toLowerCase().includes('authorized') ||
+        errorMsg.toLowerCase().includes('session expired') ||
+        errorMsg.toLowerCase().includes('authentication')
+      ) {
+        setError('Your session has expired. Redirecting to login...');
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('isLoggedIn');
+          localStorage.setItem('redirectAfterLogin', window.location.pathname);
+          window.location.href = '/login';
+        }, 1500);
+      } else {
+        setError(errorMsg);
+      }
       setLoading(false);
     }
   };

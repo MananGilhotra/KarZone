@@ -9,10 +9,13 @@ import axios from 'axios';
 const PROD_BACKEND_URL = 'https://karzone-uptg.onrender.com/api';
 
 const resolveApiBaseUrl = () => {
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/+$/, '');
-
   if (typeof window !== 'undefined') {
+    const isVercel = window.location.hostname === 'kar-zone.vercel.app' ||
+      window.location.hostname.endsWith('.vercel.app');
+    if (isVercel) {
+      return PROD_BACKEND_URL;
+    }
+
     const lsUrl = localStorage.getItem('API_BASE_URL');
     if (lsUrl && /^https?:\/\//.test(lsUrl)) return lsUrl.replace(/\/+$/, '');
 
@@ -20,17 +23,15 @@ const resolveApiBaseUrl = () => {
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1';
 
-    const isVercel = window.location.hostname === 'kar-zone.vercel.app' ||
-      window.location.hostname.endsWith('.vercel.app');
-    if (isVercel) {
-      return PROD_BACKEND_URL;
-    }
-
     if (!isLocal) {
       // Try same-origin /api (works if frontend is proxying to backend)
       return `${window.location.origin}/api`;
     }
   }
+
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/+$/, '');
+
   return 'http://localhost:3001/api';
 };
 

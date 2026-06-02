@@ -9,32 +9,33 @@ import axios from 'axios';
 const PROD_BACKEND_URL = 'https://karzone-uptg.onrender.com/api';
 
 const resolveApiBaseUrl = () => {
-  // 1) VITE_API_BASE_URL env (recommended for Vercel)
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/+$/, '');
-
   if (typeof window !== 'undefined') {
-    // 2) LocalStorage override (allow runtime hotfix without rebuild)
-    const lsUrl = localStorage.getItem('API_BASE_URL');
-    if (lsUrl && /^https?:\/\//.test(lsUrl)) return lsUrl.replace(/\/+$/, '');
-
+    // 1) Vercel deployment: ALWAYS use the known working production backend
     const isVercel = window.location.hostname === 'kar-zone.vercel.app' ||
       window.location.hostname.endsWith('.vercel.app');
     if (isVercel) {
       return PROD_BACKEND_URL;
     }
 
+    // 2) LocalStorage override (allow runtime hotfix without rebuild)
+    const lsUrl = localStorage.getItem('API_BASE_URL');
+    if (lsUrl && /^https?:\/\//.test(lsUrl)) return lsUrl.replace(/\/+$/, '');
+
     const isLocal =
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1';
 
     if (!isLocal) {
-      // 3) If not localhost in browser, use same-origin /api (for reverse-proxy scenarios)
+      // 3) If not localhost in browser, use same-origin /api
       return `${window.location.origin}/api`;
     }
   }
 
-  // 4) Fallback to localhost:3001 for local dev
+  // 4) VITE_API_BASE_URL env (fallback for other deployments)
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/+$/, '');
+
+  // 5) Fallback to localhost:3001 for local dev
   return 'http://localhost:3001/api';
 };
 

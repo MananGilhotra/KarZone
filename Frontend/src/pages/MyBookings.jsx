@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -53,6 +53,9 @@ const MyBookings = () => {
   });
   const [reviews, setReviews] = useState([]);
 
+  const hasShownSuccess = useRef(false);
+
+  // Fetch bookings and reviews on mount
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -75,11 +78,14 @@ const MyBookings = () => {
       }
     };
     fetchReviews();
+  }, []);
 
-    // Show success message if redirected from payment
-    if (searchParams.get('success') === 'true') {
+  // Show success message if redirected from payment (runs only once)
+  useEffect(() => {
+    if (searchParams.get('success') === 'true' && !hasShownSuccess.current) {
+      hasShownSuccess.current = true;
       showSuccess('Payment successful! Your booking has been confirmed.');
-      setSearchParams({});
+      setSearchParams({}, { replace: true });
     }
   }, [searchParams, setSearchParams, showSuccess]);
 

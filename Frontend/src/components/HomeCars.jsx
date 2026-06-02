@@ -59,7 +59,7 @@ const HomeCars = () => {
               <img
                 src={car.image}
                 alt={car.name}
-                className={`w-full h-full object-cover transition-transform duration-700 ${hoveredCard === car.id ? 'scale-110' : 'scale-100'}`}
+                className={`w-full h-full object-cover transition-transform duration-700 ${hoveredCard === (car.id) ? 'scale-110' : 'scale-100'}`}
               />
               <div className={styles.priceBadge}>
                 <span className={styles.priceText}>₹{car.price.toLocaleString()}/day</span>
@@ -75,32 +75,32 @@ const HomeCars = () => {
 
               <div className={styles.specsGrid}>
                 <div className={styles.specItem}>
-                  <div className={styles.specIconContainer(hoveredCard === car.id)}>
-                    <FaUsers className={styles.specIcon(hoveredCard === car.id)} />
+                  <div className={styles.specIconContainer(hoveredCard === (car.id))}>
+                    <FaUsers className={styles.specIcon(hoveredCard === (car.id))} />
                   </div>
                   <span className={styles.specValue}>{car.seats}</span>
                   <span className={styles.specLabel}>Seats</span>
                 </div>
 
                 <div className={styles.specItem}>
-                  <div className={styles.specIconContainer(hoveredCard === car.id)}>
-                    <FaGasPump className={styles.specIcon(hoveredCard === car.id)} />
+                  <div className={styles.specIconContainer(hoveredCard === (car.id))}>
+                    <FaGasPump className={styles.specIcon(hoveredCard === (car.id))} />
                   </div>
                   <span className={styles.specValue}>{car.fuel}</span>
                   <span className={styles.specLabel}>Fuel</span>
                 </div>
 
                 <div className={styles.specItem}>
-                  <div className={styles.specIconContainer(hoveredCard === car.id)}>
-                    <FaTachometerAlt className={styles.specIcon(hoveredCard === car.id)} />
+                  <div className={styles.specIconContainer(hoveredCard === (car.id))}>
+                    <FaTachometerAlt className={styles.specIcon(hoveredCard === (car.id))} />
                   </div>
                   <span className={styles.specValue}>{car.mileage}</span>
                   <span className={styles.specLabel}>Mileage</span>
                 </div>
 
                 <div className={styles.specItem}>
-                  <div className={styles.specIconContainer(hoveredCard === car.id)}>
-                    <FaCog className={styles.specIcon(hoveredCard === car.id)} />
+                  <div className={styles.specIconContainer(hoveredCard === (car.id))}>
+                    <FaCog className={styles.specIcon(hoveredCard === (car.id))} />
                   </div>
                   <span className={styles.specValue}>{car.transmission}</span>
                   <span className={styles.specLabel}>Gear</span>

@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import PaymentModal from '../components/PaymentModal';
 import carsData from '../assets/carsData';
 import homeCarsData from '../assets/HcarsData';
+import { carsAPI } from '../utils/api';
 import { carDetailStyles as styles } from '../assets/dummyStyles';
 import { 
   FaUsers, 
@@ -26,6 +27,7 @@ const Booking = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     pickupDate: '',
     returnDate: '',
@@ -41,14 +43,36 @@ const Booking = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const allCars = [...carsData, ...homeCarsData];
-    const foundCar = allCars.find(c => c.id === parseInt(id));
-    if (foundCar) {
-      setCar(foundCar);
-      setTotalPrice(foundCar.price);
-    } else {
-      navigate('/cars');
-    }
+    const loadCar = async () => {
+      setLoading(true);
+      
+      // Try API first (works with MongoDB ObjectId)
+      try {
+        const response = await carsAPI.getCarById(id);
+        if (response.car) {
+          const apiCar = { ...response.car, id: response.car._id };
+          setCar(apiCar);
+          setTotalPrice(apiCar.price);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.log('API car fetch failed, trying local data:', err.message);
+      }
+
+      // Fallback to local hardcoded data (works with numeric id)
+      const allCars = [...carsData, ...homeCarsData];
+      const foundCar = allCars.find(c => c.id === parseInt(id));
+      if (foundCar) {
+        setCar(foundCar);
+        setTotalPrice(foundCar.price);
+      } else {
+        navigate('/cars');
+      }
+      setLoading(false);
+    };
+
+    loadCar();
 
     // Check for Stripe payment success callback
     const sessionId = searchParams.get('session_id');

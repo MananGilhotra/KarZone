@@ -1,17 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import carsData from '../assets/carsData';
+import localCarsData from '../assets/carsData';
+import { carsAPI } from '../utils/api';
 import { carPageStyles as styles } from '../assets/dummyStyles';
 import { FaUsers, FaGasPump, FaLeaf, FaShieldAlt, FaBolt, FaStar, FaArrowRight } from 'react-icons/fa';
 
 const Cars = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [carsData, setCarsData] = useState(localCarsData); // fallback to local
+  const [loading, setLoading] = useState(true);
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await carsAPI.getAllCars();
+        if (response.cars && response.cars.length > 0) {
+          // Map API cars to use _id as id for routing
+          const apiCars = response.cars.map(car => ({
+            ...car,
+            id: car._id,
+          }));
+          setCarsData(apiCars);
+        }
+        // If no API cars, keep using local hardcoded data
+      } catch (err) {
+        console.log('Using local cars data (API unavailable):', err.message);
+        // Keep using localCarsData (already set as default)
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCars();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -31,7 +59,7 @@ const Cars = () => {
         observer.unobserve(currentRef);
       }
     };
-  }, []);
+  }, [loading]);
 
   const getFuelIcon = (fuel) => {
     switch (fuel.toLowerCase()) {
@@ -104,79 +132,85 @@ const Cars = () => {
           </button>
         </div>
 
-        <div ref={sectionRef} className={styles.gridContainer}>
-          {filteredCars.map((car, index) => (
-            <div
-              key={car.id}
-              className={`${styles.carCard} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              style={{
-                transitionDelay: `${index * 50}ms`,
-                transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-              onMouseEnter={() => setHoveredCard(car.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div className={styles.glowEffect}></div>
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <div ref={sectionRef} className={styles.gridContainer}>
+            {filteredCars.map((car, index) => (
+              <div
+                key={car.id || car._id}
+                className={`${styles.carCard} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                style={{
+                  transitionDelay: `${index * 50}ms`,
+                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={() => setHoveredCard(car.id || car._id)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className={styles.glowEffect}></div>
 
-              <div className={styles.imageContainer}>
-                <img
-                  src={car.image}
-                  alt={car.name}
-                  className={`${styles.carImage} ${hoveredCard === car.id ? 'scale-110' : 'scale-100'}`}
-                />
-                <div className={styles.priceBadge}>
-                  ₹{car.price.toLocaleString()}/day
+                <div className={styles.imageContainer}>
+                  <img
+                    src={car.image}
+                    alt={car.name}
+                    className={`${styles.carImage} ${hoveredCard === (car.id || car._id) ? 'scale-110' : 'scale-100'}`}
+                  />
+                  <div className={styles.priceBadge}>
+                    ₹{car.price.toLocaleString()}/day
+                  </div>
+                </div>
+
+                <div className={styles.cardContent}>
+                  <div className={styles.headerRow}>
+                    <div>
+                      <h3 className={styles.carName}>{car.name}</h3>
+                      <p className={styles.carType}>{car.type}</p>
+                    </div>
+                  </div>
+
+                  <div className={styles.specsGrid}>
+                    <div className={styles.specItem}>
+                      <div className={styles.specIconContainer}>
+                        <FaUsers className="text-orange-400" />
+                      </div>
+                      <span className="text-gray-300">{car.seats} Seats</span>
+                    </div>
+
+                    <div className={styles.specItem}>
+                      <div className={styles.specIconContainer}>
+                        {getFuelIcon(car.fuel)}
+                      </div>
+                      <span className="text-gray-300">{car.fuel}</span>
+                    </div>
+
+                    <div className={styles.specItem}>
+                      <div className={styles.specIconContainer}>
+                        <FaLeaf className="text-green-400" />
+                      </div>
+                      <span className="text-gray-300">{car.mileage}</span>
+                    </div>
+
+                    <div className={styles.specItem}>
+                      <div className={styles.specIconContainer}>
+                        <FaShieldAlt className="text-purple-400" />
+                      </div>
+                      <span className="text-gray-300">Premium</span>
+                    </div>
+                  </div>
+
+                  <Link to={`/cars/${car.id || car._id}`} className="block mt-4">
+                    <button className={styles.bookButton}>
+                      <span className={styles.buttonText}>Book Now</span>
+                      <FaArrowRight className={styles.buttonIcon} />
+                    </button>
+                  </Link>
                 </div>
               </div>
-
-              <div className={styles.cardContent}>
-                <div className={styles.headerRow}>
-                  <div>
-                    <h3 className={styles.carName}>{car.name}</h3>
-                    <p className={styles.carType}>{car.type}</p>
-                  </div>
-                </div>
-
-                <div className={styles.specsGrid}>
-                  <div className={styles.specItem}>
-                    <div className={styles.specIconContainer}>
-                      <FaUsers className="text-orange-400" />
-                    </div>
-                    <span className="text-gray-300">{car.seats} Seats</span>
-                  </div>
-
-                  <div className={styles.specItem}>
-                    <div className={styles.specIconContainer}>
-                      {getFuelIcon(car.fuel)}
-                    </div>
-                    <span className="text-gray-300">{car.fuel}</span>
-                  </div>
-
-                  <div className={styles.specItem}>
-                    <div className={styles.specIconContainer}>
-                      <FaLeaf className="text-green-400" />
-                    </div>
-                    <span className="text-gray-300">{car.mileage}</span>
-                  </div>
-
-                  <div className={styles.specItem}>
-                    <div className={styles.specIconContainer}>
-                      <FaShieldAlt className="text-purple-400" />
-                    </div>
-                    <span className="text-gray-300">Premium</span>
-                  </div>
-                </div>
-
-                <Link to={`/cars/${car.id}`} className="block mt-4">
-                  <button className={styles.bookButton}>
-                    <span className={styles.buttonText}>Book Now</span>
-                    <FaArrowRight className={styles.buttonIcon} />
-                  </button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

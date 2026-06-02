@@ -189,6 +189,17 @@ const Navbar = () => {
               <span className="text-lg font-medium">Login</span>
             </Link>
           )}
+          
+          <div className="w-px h-5 bg-white/20 mx-3"></div>
+          <Link
+            to="/admin/login"
+            className="flex items-center gap-2 text-orange-500/80 hover:text-orange-500 transition-colors"
+            title="Admin Panel"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </Link>
         </div>
 
         {/* Mobile menu toggle */}
@@ -299,6 +310,19 @@ const Navbar = () => {
                 Login
               </Link>
             )}
+            
+            <div className="border-t border-gray-700/50 mt-2 pt-2">
+              <Link
+                to="/admin/login"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-base font-medium text-orange-500/80 hover:text-orange-500 hover:bg-gray-800"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Admin Panel
+              </Link>
+            </div>
           </div>
         </div>
       </div>

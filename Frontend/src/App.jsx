@@ -7,6 +7,9 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Booking from './pages/Booking';
 import MyBookings from './pages/MyBookings';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminRoute from './components/AdminRoute';
 
 const App = () => {
   return (
@@ -19,6 +22,9 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       </Routes>
     </Router>
   );

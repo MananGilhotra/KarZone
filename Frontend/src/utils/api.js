@@ -161,5 +161,107 @@ export const reviewsAPI = {
   },
 };
 
-export default api;
+// Cars API (Public)
+export const carsAPI = {
+  getAllCars: async () => {
+    return api.get('/cars');
+  },
 
+  getCarById: async (carId) => {
+    return api.get(`/cars/${carId}`);
+  },
+};
+
+// Admin API
+// Uses a separate Axios instance with adminToken
+const adminApi = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+adminApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+adminApi.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    if (error.response) {
+      const message = error.response.data.message || 'Server error';
+      if (error.response.status === 401 || error.response.status === 403) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+      }
+      throw new Error(message);
+    } else if (error.request) {
+      throw new Error(`Cannot connect to server at ${API_BASE_URL}.`);
+    } else {
+      throw error;
+    }
+  }
+);
+
+export const adminAPI = {
+  login: async (email, password) => {
+    return adminApi.post('/admin/login', { email, password });
+  },
+
+  getDashboard: async () => {
+    return adminApi.get('/admin/dashboard');
+  },
+
+  // Bookings
+  getAllBookings: async () => {
+    return adminApi.get('/admin/bookings');
+  },
+
+  updateBookingStatus: async (bookingId, status) => {
+    return adminApi.put(`/admin/bookings/${bookingId}/status`, { status });
+  },
+
+  // Users
+  getAllUsers: async () => {
+    return adminApi.get('/admin/users');
+  },
+
+  deleteUser: async (userId) => {
+    return adminApi.delete(`/admin/users/${userId}`);
+  },
+
+  // Reviews
+  getAllReviews: async () => {
+    return adminApi.get('/admin/reviews');
+  },
+
+  deleteReview: async (reviewId) => {
+    return adminApi.delete(`/admin/reviews/${reviewId}`);
+  },
+
+  // Cars (Admin CRUD)
+  getAllCars: async () => {
+    return adminApi.get('/cars/all');
+  },
+
+  createCar: async (carData) => {
+    return adminApi.post('/cars', carData);
+  },
+
+  updateCar: async (carId, carData) => {
+    return adminApi.put(`/cars/${carId}`, carData);
+  },
+
+  deleteCar: async (carId) => {
+    return adminApi.delete(`/cars/${carId}`);
+  },
+};
+
+export default api;

@@ -11,6 +11,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from 'recharts';
+import toast from 'react-hot-toast';
 
 // ═══════════════════════════════════════════════════════════════
 // MAIN DASHBOARD COMPONENT
@@ -118,10 +119,11 @@ const AdminDashboard = () => {
       setModalOpen(false);
       setEditingCar(null);
       setCarForm({ name: '', type: '', price: '', image: '', seats: '', fuel: '', mileage: '', transmission: 'Automatic' });
+      toast.success(editingCar ? 'Car updated successfully' : 'Car added successfully');
       fetchCars();
       fetchDashboard();
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -144,35 +146,39 @@ const AdminDashboard = () => {
     if (!confirm('Are you sure you want to delete this car?')) return;
     try {
       await adminAPI.deleteCar(carId);
+      toast.success('Car deleted successfully');
       fetchCars();
       fetchDashboard();
-    } catch (err) { alert(err.message); }
+    } catch (err) { toast.error(err.message); }
   };
 
   const handleBookingStatus = async (bookingId, status) => {
     try {
       await adminAPI.updateBookingStatus(bookingId, status);
+      toast.success('Booking status updated');
       fetchBookings();
       fetchDashboard();
-    } catch (err) { alert(err.message); }
+    } catch (err) { toast.error(err.message); }
   };
 
   const handleDeleteUser = async (userId) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
       await adminAPI.deleteUser(userId);
+      toast.success('User deleted successfully');
       fetchUsers();
       fetchDashboard();
-    } catch (err) { alert(err.message); }
+    } catch (err) { toast.error(err.message); }
   };
 
   const handleDeleteReview = async (reviewId) => {
     if (!confirm('Are you sure you want to delete this review?')) return;
     try {
       await adminAPI.deleteReview(reviewId);
+      toast.success('Review deleted successfully');
       fetchReviews();
       fetchDashboard();
-    } catch (err) { alert(err.message); }
+    } catch (err) { toast.error(err.message); }
   };
 
   const navItems = [
